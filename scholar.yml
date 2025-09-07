@@ -2,19 +2,28 @@ name: Update Publications from Google Scholar
 
 on:
   schedule:
-    - cron: '0 0 * * 0'  # Runs weekly
+    - cron: '0 0 * * 0'  # Weekly
   workflow_dispatch:
   push:
 
 jobs:
-  build:
+  scraper:
     runs-on: ubuntu-latest
-    name: Scrape Google Scholar
+
     steps:
       - uses: actions/checkout@v3
+
       - name: Run ScholarScraper
         uses: PhillipLavin/scholar_scraper@v2.1
         with:
-          scholar_user_id: cQd43coAAAAJ&hl=en
+          scholar_user_id: cQd43coAAAAJ
           output_format: markdown
           output_file: publications.md
+
+      - name: Commit updated publications
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add publications.md
+          git commit -m "Update publications from Google Scholar" || echo "No changes to commit"
+          git push
