@@ -1,0 +1,20 @@
+name: Update Publications from Google Scholar
+
+on:
+  schedule:
+    - cron: '0 0 * * 0'  # Runs weekly
+  workflow_dispatch:
+  push:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    name: Scrape Google Scholar
+    steps:
+      - uses: actions/checkout@v3
+      - name: Run ScholarScraper
+        uses: PhillipLavin/scholar_scraper@v2.1
+        with:
+          scholar_user_id: YOUR_SCHOLAR_ID_HERE
+          output_format: markdown
+          output_file: publications.md
